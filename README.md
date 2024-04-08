@@ -37,16 +37,16 @@ The call to GET /todoitems produces a response similar to the following:
 
 This app uses an in-memory database. If the app is restarted, the GET request doesn't return any data. If no data is returned, POST data to the app and try the GET request again.
 
-### Build and Run the Docker Image
-#### Prerequisites
+## Build and Run the Docker Image
+### Prerequisites
 - Docker installed on your machine.
 
-#### Building Docker Image
+### Building Docker Image
 ```
 docker build -t dotnet-todo .
 ```
 
-#### Running Docker Container
+### Running Docker Container
 ```
 docker run --rm -it -p 5000:8080 dotnet-todo
 ```
@@ -75,3 +75,42 @@ http://localhost:5000/todoitems
 
 E.g. fix(animations): fixed the broken loading clock animation
 
+## Deploy Helm Chart
+Before we start we have to start a minikube cluster.
+```
+minikube start
+```
+
+### Install Cluster
+- To install a helm chart for intg environment use the following helm command
+```
+helm install todoapi-intg .\mychart\ --values .\mychart\values.yaml
+```
+### Upgrade Cluster
+- To upgrade after editing the templates use the following helm command
+```
+helm upgrade todoapi-intg .\mychart\ --values .\mychart\values.yaml
+```
+### Access Cluster
+- To access the cluster locally use minikube tunneling
+```
+minikube tunnel
+```
+Go to http://localhost:8080/todoapi
+
+### Create TRAIN/PRODUCTION Clusters
+```
+kubectl create namespace train
+kubectl create namespace prod
+helm install todoapi-train .\mychart\ --values .\mychart\values.yaml -f .\mychart\values-train.yaml -n train
+helm install todoapi-prod .\mychart\ --values .\mychart\values.yaml -f .\mychart\values-prod.yaml -n prod
+```
+Because all of the 3 clusters are exposed on port 8080, we have to use the following kubectl command to port-forward the traffic to another port, so we can access all three clusters.
+The command can be found after executing the helm install commands, at the end of the output in the section NOTES.
+We can close the minikube tunnel now, because we will access all three clusters via port-forwarding.
+
+```
+kubectl --namespace default port-forward service/todoapi-intg 8887:8080
+kubectl --namespace train port-forward service/todoapi-train 8888:8080
+kubectl --namespace prod port-forward service/todoapi-prod 8889:8080
+```
