@@ -2,6 +2,7 @@
 
 ## Commit Message Header
 
+```
 <type>(<scope>): <short summary>
   │       │             │
   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
@@ -13,6 +14,7 @@
   │                          devtools
   │
   └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test
+```
 
 E.g. fix(animations): fixed the broken loading clock animation
  
