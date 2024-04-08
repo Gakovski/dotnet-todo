@@ -81,17 +81,15 @@ Before we start we have to start a minikube cluster.
 minikube start
 ```
 
-### Install Cluster
-- To install a helm chart for intg environment use the following helm command
+- To install a cluster for the intg environment use the following helm command
 ```
 helm install todoapi-intg .\mychart\ --values .\mychart\values.yaml
 ```
-### Upgrade Cluster
-- To upgrade after editing the templates use the following helm command
+- To upgrade the cluster after editing the templates use the following helm command
 ```
 helm upgrade todoapi-intg .\mychart\ --values .\mychart\values.yaml
 ```
-### Access Cluster
+
 - To access the cluster locally use minikube tunneling
 ```
 minikube tunnel
