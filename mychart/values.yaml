@@ -1,0 +1,13 @@
+appName: todoapi-intg
+
+namespace: default
+
+replicas: 1
+
+port: 8080
+
+serviceType: LoadBalancer
+
+image:
+  name: gakovski/clockbox
+  tag: latest
