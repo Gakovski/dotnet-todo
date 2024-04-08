@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /App
 
-COPY TodoApi.csproj ./
+COPY ./src/TodoApi.csproj ./
 RUN dotnet restore 
 
 COPY . ./
