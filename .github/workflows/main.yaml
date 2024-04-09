@@ -4,6 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
+  first:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@4
+
+      - name: Run test command
+        run: echo testing
+
   scan-code:
     uses: gakovski/dotnet-todo/.github/workflows/scan-code.yaml@main
 
