@@ -5,10 +5,11 @@ on:
 
 jobs:
   scan-code:
+    name: Scan code with CodeQL
     uses: gakovski/dotnet-todo/.github/workflows/scan-code.yaml@main
 
   build-docker:
-  needs: scan-code
+    name: Build Docker Container
     uses: gakovski/dotnet-todo/.github/workflows/build.yaml@main
     with:
       image_name: 'to-do-api'
@@ -18,11 +19,11 @@ jobs:
       dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
 
   deploy-cluster:
-  needs: build-docker
+    name: Deploy K8S Cluster
+    uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
     strategy:
       matrix:
         env: [train, prod]
-    uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
     with:
       environment: '${{ matrix.env }}'
 
