@@ -29,8 +29,8 @@ jobs:
             "values.yaml", 
             "values.prod.yaml"
           ]
-      #env:
-      #  KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
 
     - name: kubectl
       run: kubectl get pods -A
