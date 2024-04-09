@@ -35,9 +35,9 @@ jobs:
 
     - name: Test service URLs before POST
       run: |
-        echo "------------------opening the service------------------"
-        curl $(minikube service todoapi-minikube --url)/todoitems
+        sleep 15
         echo "urlminikube=$(minikube service todoapi-minikube --url)/todoitems" >> $GITHUB_ENV
+        sleep 15
 
     - name: POST Request
       uses: fjogeleit/http-request-action@v1
