@@ -33,7 +33,7 @@ jobs:
     - name: Get pods
       run: kubectl get pods -A
 
-    - name: Test service URLs before POST
+    - name: Get URL
       run: |
         sleep 15
         echo "urlminikube=$(minikube service todoapi-minikube --url)/todoitems" >> $GITHUB_ENV
@@ -42,12 +42,12 @@ jobs:
     - name: POST Request
       uses: fjogeleit/http-request-action@v1
       with:
-        url: env.urlminikube
+        url: ${{ env.urlminikube }}
         method: 'POST'
         customHeaders: '{"Content-Type": "application/json"}'
         data: '{"id": 1, "name": "dog walk", "isCompleted": false}'
 
-    - name: Test service URLs after POST
+    - name: Test service URLs
       run: |
         echo "------------------opening the service------------------"
         curl $(minikube service todoapi-minikube --url)/todoitems
