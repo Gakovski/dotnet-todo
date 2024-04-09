@@ -14,6 +14,7 @@ jobs:
 
   build-docker:
     name: Build Docker Container
+    needs: scan-code
     uses: gakovski/dotnet-todo/.github/workflows/build.yaml@main
     with:
       image_name: 'to-do-api'
