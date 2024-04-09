@@ -1,5 +1,5 @@
 # dotnet-todo
-
+![Main CI/CD](https://github.com/gakovski/dotnet-todo/actions/workflows/main.yaml/badge.svg)
 ## Test the GET endpoints
 
 Test the app by calling the endpoints from a browser or Postman. The following steps are for Postman.
