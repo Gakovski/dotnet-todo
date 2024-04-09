@@ -2,6 +2,11 @@ name: Main CI/CD
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy_prod:
+        description: Deploy Cluster to Production
+        required: true
+        type: boolean
 
 jobs:
   scan-code:
@@ -23,16 +28,24 @@ jobs:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  deploy-cluster:
-    name: Deploy K8S Cluster
+  deploy-cluster-train:
+    name: Deploy K8S Cluster - Train
+    needs: build-docker
     uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
-    strategy:
-      matrix:
-        env: [train, prod]
     with:
-      environment: '${{ matrix.env }}'
+      environment: 'train'
 
-  #create-release:
-  #  uses: gakovski/dotnet-todo/.github/workflows/release.yaml@main
-  #  secrets:
-  #    github_token: ${{ secrets.GITHUB_TOKEN }}
+  deploy-cluster-prod:
+    name: Deploy K8S Cluster - Prod
+    needs: deploy-cluster-train
+    if: ${{ inputs.deploy_prod }} == true
+    uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
+    with:
+      environment: 'prod'
+
+  create-release:
+    name: Create Release Notes
+    needs: deploy-cluster-prod
+    uses: gakovski/dotnet-todo/.github/workflows/release.yaml@main
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
