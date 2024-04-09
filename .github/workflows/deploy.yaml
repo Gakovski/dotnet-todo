@@ -22,12 +22,39 @@ jobs:
     - name: Get pods
       run: kubectl get pods -A
 
-    - name: Create Namespace
-      run: kubectl create namespace train
+    - name: Deploy deployment-minikube.yaml
+      run:
+        kubectl apply -f deployment-minikube.yaml
 
-      #testing
-    - name: Install Helm Chart
-      run: helm install todoapi-train ./mychart/ --values ./mychart/values.yaml -f ./mychart/values-train.yaml -n train
+    - name: Deploy service-minikube.yaml
+      run:
+        kubectl apply -f service-minikube.yaml
+  
+    - name: Get pods
+      run: kubectl get pods -A
+
+    - name: Test service URLs before POST
+      run: |
+        echo "------------------opening the service------------------"
+        curl $(minikube service todoapi-minikube --url)/todoitems
+        echo "urlminikube=$(minikube service todoapi-minikube --url)/todoitems" >> $GITHUB_ENV
+
+    - name: POST Request
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: env.urlminikube
+        method: 'POST'
+        customHeaders: '{"Content-Type": "application/json"}'
+        data: '{"id": 1, "name": "dog walk", "isCompleted": false}'
+
+    - name: Test service URLs after POST
+      run: |
+        echo "------------------opening the service------------------"
+        curl $(minikube service todoapi-minikube --url)/todoitems
+
+    #FOR LOCAL DEPLOYMENT ON RUNNER ^
+
+    #FOR CLOUD DEPLOYMENT v
 
     #- name: 'Deploy'
     #  uses: 'deliverybot/helm@v1'
@@ -45,6 +72,3 @@ jobs:
     #      ]
     #  env:
     #    KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
-
-    - name: Get pods
-      run: kubectl get pods -A
