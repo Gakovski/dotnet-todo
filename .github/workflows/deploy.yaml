@@ -24,7 +24,7 @@ jobs:
 
       #testing
     - name: Install Helm Chart
-      run: helm install todoapi-train ".\mychart\" --values ".\mychart\values.yaml" -f ".\mychart\values-train.yaml"
+      run: helm install todoapi-train ./mychart/ --values ./mychart/values.yaml -f ./mychart/values-train.yaml
 
     #- name: 'Deploy'
     #  uses: 'deliverybot/helm@v1'
