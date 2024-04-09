@@ -1,0 +1,33 @@
+name: Deploy
+on:
+  workflow_dispatch:
+
+jobs:
+  deployment:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Start Minikube
+      id: minikube
+      uses: medyagh/setup-minikube@latest
+
+    - name: kubectl
+      run: kubectl get pods -A
+
+    #- name: 'Deploy'
+    #  uses: 'deliverybot/helm@v1'
+    #  with:
+    #    release: 'todoapi-prod'
+    #    namespace: 'default'
+    #    chart: 'app'
+    #    token: '${{ github.token }}'
+    #    values: |
+    #      name: foobar
+    #    value-files: >-
+    #    [
+    #      "values.yaml", 
+    #      "values.prod.yaml"
+    #    ]
+    #  env:
+    #    KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
