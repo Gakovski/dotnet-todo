@@ -112,3 +112,65 @@ kubectl --namespace default port-forward service/todoapi-intg 8887:8080
 kubectl --namespace train port-forward service/todoapi-train 8888:8080
 kubectl --namespace prod port-forward service/todoapi-prod 8889:8080
 ```
+Alternatively we can also access the clusters via the minikube's IP address along with the assigned port.
+```
+minikube service todoapi-train -n train --url
+minikube service todoapi-prod -n prod --url
+```
+The output will display the IP address and port number. Open that url and add /todoitems
+
+## Workflows
+
+1. **build.yaml**: Responsible for building Docker images and pushing them to Docker Hub.
+2. **deploy.yaml**: Deploys the Docker container to a Kubernetes cluster.
+3. **release.yaml**: Creates release notes using semantic versioning.
+4. **scan-code.yaml**: Analyzes the code using CodeQL.
+5. **main.yaml**: Main CI/CD workflow that orchestrates the execution of other workflows based on specific conditions.
+
+## Workflow Details
+
+### 1. build.yaml
+
+This workflow builds Docker images and pushes them to Docker Hub.
+
+- **Inputs**: 
+  - `image_name`: Name of the Docker image.
+  - `image_tag`: Tag of the Docker image.
+- **Secrets**:
+  - `dockerhub_username`: Docker Hub username.
+  - `dockerhub_password`: Docker Hub access token.
+
+### 2. deploy.yaml
+
+Deploys the Docker container to a Kubernetes cluster.
+
+- **Inputs**: 
+  - `environment`: Specifies the deployment environment (e.g., 'prod' or 'train').
+
+### 3. release.yaml
+
+Creates release notes using semantic versioning.
+
+- **Secrets**:
+  - `token`: GitHub token with necessary permissions to create releases.
+
+### 4. scan-code.yaml
+
+Analyzes the code using CodeQL.
+
+### 5. main.yaml
+
+Main CI/CD workflow that orchestrates the execution of other workflows based on specific conditions.
+
+- **Inputs**:
+  - `deploy_prod`: Boolean variable indicating whether to deploy to the production environment.
+
+## Conditional Execution
+
+The `main.yaml` workflow includes conditional execution logic to trigger different jobs based on specific conditions. For example, the deployment to the production environment (`deploy-cluster-prod`) is executed only when the `deploy_prod` input is set to `true`.
+
+## Reusability
+
+These workflows are designed to be reusable and modular. They can be easily integrated into other repositories by referencing the workflow files using their respective paths.
+
+For more detailed information about each workflow and its usage, refer to the corresponding YAML files in the `.github/workflows` directory.
