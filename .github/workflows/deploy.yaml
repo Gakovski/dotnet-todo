@@ -50,7 +50,7 @@ jobs:
     - name: Test service URLs
       run: |
         echo "------------------opening the service------------------"
-        curl $(minikube service todoapi-minikube --url)/todoitems
+        curl ${{ env.urlminikube }}
 
     #FOR LOCAL DEPLOYMENT ON RUNNER ^
 
