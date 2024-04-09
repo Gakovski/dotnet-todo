@@ -8,6 +8,7 @@ jobs:
     uses: gakovski/dotnet-todo/.github/workflows/scan-code.yaml@main
 
   build-docker:
+  needs: scan-code
     uses: gakovski/dotnet-todo/.github/workflows/build.yaml@main
     with:
       image_name: 'to-do-api'
@@ -17,6 +18,7 @@ jobs:
       dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
 
   deploy-cluster:
+  needs: build-docker
     strategy:
       matrix:
         env: [train, prod]
