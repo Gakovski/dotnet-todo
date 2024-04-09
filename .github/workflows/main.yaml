@@ -48,4 +48,4 @@ jobs:
     needs: deploy-cluster-prod
     uses: gakovski/dotnet-todo/.github/workflows/release.yaml@main
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      token: ${{ secrets.GITHUB_TOKEN }}
