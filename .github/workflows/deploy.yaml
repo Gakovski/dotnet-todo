@@ -1,6 +1,11 @@
-name: Deploy
+name: Reusable - Deploy Kubernetes Cluster
+
 on:
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
 
 jobs:
   deployment:
@@ -20,10 +25,10 @@ jobs:
       uses: medyagh/setup-minikube@latest
 
     - name: Create Namespace
-      run: kubectl create namespace train
+      run: kubectl create namespace ${{ inputs.environment }}
 
     - name: Install Helm Chart
-      run: helm install todoapi-train ./mychart/ --values ./mychart/values.yaml -f ./mychart/values-train.yaml -n train
+      run: helm install todoapi-${{ inputs.environment }} ./mychart/ --values ./mychart/values.yaml -f ./mychart/values-${{ inputs.environment }}.yaml -n ${{ inputs.environment }}
   
     - name: Get pods
       run: kubectl get pods -A
@@ -31,7 +36,7 @@ jobs:
     - name: Get URL
       run: |
         sleep 21
-        echo "urlminikube=$(minikube service todoapi-train -n train --url)" >> $GITHUB_ENV
+        echo "urlminikube=$(minikube service todoapi-${{ inputs.environment }} -n ${{ inputs.environment }} --url)" >> $GITHUB_ENV
 
     - name: POST Request
       uses: fjogeleit/http-request-action@v1
@@ -39,21 +44,7 @@ jobs:
         url: ${{ env.urlminikube }}/todoitems
         method: 'POST'
         customHeaders: '{"Content-Type": "application/json"}'
-        data: '{"id": 1, "name": "train environment", "isCompleted": false}'
-
-    - name: Test service URLs
-      run: |
-        sleep 20
-        curl ${{ env.urlminikube }}/healthz
-        curl ${{ env.urlminikube }}/todoitems
-
-    - name: POST Request
-      uses: fjogeleit/http-request-action@v1
-      with:
-        url: ${{ env.urlminikube }}/todoitems
-        method: 'POST'
-        customHeaders: '{"Content-Type": "application/json"}'
-        data: '{"id": 1, "name": "train environment 2", "isCompleted": false}'
+        data: '{"id": 1, "name": "${{ inputs.environment }} environment", "isCompleted": false}'
 
     - name: Test service URLs
       run: |

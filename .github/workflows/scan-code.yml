@@ -1,7 +1,7 @@
-name: CodeQL
+name: Reusable - Scan Code
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   analyze:

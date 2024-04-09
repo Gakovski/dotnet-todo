@@ -1,0 +1,33 @@
+name: main
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  scan-code:
+    uses: gakovski/dotnet-todo/.github/workflows/scan-code.yaml@main
+
+  build-docker:
+  needs: [scan-code]
+    uses: gakovski/dotnet-todo/.github/workflows/build.yaml@main
+    with:
+      image_name: to-do-api
+      image_tag: latest
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  deploy-cluster:
+  needs: [build-docker]
+    strategy:
+      matrix:
+        env: [train, prod]
+    uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
+    with:
+      environment: ${{ matrix.env }}
+
+  #create-release:
+  #  uses: gakovski/dotnet-todo/.github/workflows/release.yaml@main
+  #  secrets:
+  #    github_token: ${{ secrets.GITHUB_TOKEN }}
