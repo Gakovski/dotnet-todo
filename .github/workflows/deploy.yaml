@@ -8,29 +8,40 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - run: |
+       curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+       sudo apt-get install apt-transport-https --yes
+       echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+       sudo apt-get update
+       sudo apt-get install helm
+
     - name: Start Minikube
       id: minikube
       uses: medyagh/setup-minikube@latest
 
-    - name: kubectl
+    - name: Get pods
       run: kubectl get pods -A
 
-    - name: 'Deploy'
-      uses: 'deliverybot/helm@v1'
-      with:
-        release: 'todoapi-prod'
-        namespace: 'default'
-        chart: 'app'
-        token: '${{ github.token }}'
-        values: |
-          name: todoapi123
-        value-files: >-
-          [
-            "values.yaml", 
-            "values.prod.yaml"
-          ]
-      env:
-        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+      #testing
+    - name: Install Helm Chart
+      run: helm install todoapi-train .\mychart\ --values .\mychart\values.yaml -f .\mychart\values-train.yaml
+
+    #- name: 'Deploy'
+    #  uses: 'deliverybot/helm@v1'
+    #  with:
+    #    release: 'todoapi-prod'
+    #    namespace: 'default'
+    #    chart: 'app'
+    #    token: '${{ github.token }}'
+    #    values: |
+    #      name: todoapi123
+    #    value-files: >-
+    #      [
+    #        "values.yaml", 
+    #        "values.prod.yaml"
+    #      ]
+    #  env:
+    #    KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
 
     - name: kubectl
       run: kubectl get pods -A
