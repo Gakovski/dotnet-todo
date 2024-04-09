@@ -2,4 +2,4 @@ appName: todoapi-train
 
 namespace: train
 
-replicas: 2
+replicas: 1

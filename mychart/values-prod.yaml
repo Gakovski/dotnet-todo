@@ -2,4 +2,4 @@ appName: todoapi-prod
 
 namespace: prod
 
-replicas: 3
+replicas: 1

@@ -30,14 +30,13 @@ jobs:
 
     - name: Get URL
       run: |
-        sleep 15
-        echo "urlminikube=$(minikube service todoapi-train -n train --url)/todoitems" >> $GITHUB_ENV
-        sleep 20
+        sleep 21
+        echo "urlminikube=$(minikube service todoapi-train -n train --url)" >> $GITHUB_ENV
 
     - name: POST Request
       uses: fjogeleit/http-request-action@v1
       with:
-        url: ${{ env.urlminikube }}
+        url: ${{ env.urlminikube }}/todoitems
         method: 'POST'
         customHeaders: '{"Content-Type": "application/json"}'
         data: '{"id": 1, "name": "train environment", "isCompleted": false}'
@@ -45,8 +44,22 @@ jobs:
     - name: Test service URLs
       run: |
         sleep 20
-        echo "------------------opening the service------------------"
-        curl ${{ env.urlminikube }}
+        curl ${{ env.urlminikube }}/healthz
+        curl ${{ env.urlminikube }}/todoitems
+
+    - name: POST Request
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: ${{ env.urlminikube }}/todoitems
+        method: 'POST'
+        customHeaders: '{"Content-Type": "application/json"}'
+        data: '{"id": 1, "name": "train environment 2", "isCompleted": false}'
+
+    - name: Test service URLs
+      run: |
+        sleep 20
+        curl ${{ env.urlminikube }}/healthz
+        curl ${{ env.urlminikube }}/todoitems
 
     #FOR LOCAL DEPLOYMENT ON RUNNER ^
 
