@@ -38,7 +38,7 @@ jobs:
   deploy-cluster-prod:
     name: Deploy K8S Cluster - Prod
     needs: deploy-cluster-train
-    if: ${{ inputs.deploy_prod }} == true
+    if: ${{ inputs.deploy_prod }}
     uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
     with:
       environment: 'prod'
