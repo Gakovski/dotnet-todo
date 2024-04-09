@@ -24,11 +24,11 @@ jobs:
 
     - name: Deploy deployment-minikube.yaml
       run:
-        kubectl apply -f deployment-minikube.yaml
+        kubectl apply -f ./mychart/templates/deployment-minikube.yaml
 
     - name: Deploy service-minikube.yaml
       run:
-        kubectl apply -f service-minikube.yaml
+        kubectl apply -f ./mychart/templates/service-minikube.yaml
   
     - name: Get pods
       run: kubectl get pods -A
