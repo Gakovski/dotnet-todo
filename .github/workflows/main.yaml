@@ -49,3 +49,7 @@ jobs:
     uses: gakovski/dotnet-todo/.github/workflows/release.yaml@main
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
