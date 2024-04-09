@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   scan-code:
     uses: gakovski/dotnet-todo/.github/workflows/scan-code.yaml@main
 
