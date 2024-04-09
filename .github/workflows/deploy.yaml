@@ -22,9 +22,12 @@ jobs:
     - name: Get pods
       run: kubectl get pods -A
 
+    - name: Create Namespace
+      run: kubectl create namespace train
+
       #testing
     - name: Install Helm Chart
-      run: helm install todoapi-train ./mychart/ --values ./mychart/values.yaml -f ./mychart/values-train.yaml
+      run: helm install todoapi-train ./mychart/ --values ./mychart/values.yaml -f ./mychart/values-train.yaml -n train
 
     #- name: 'Deploy'
     #  uses: 'deliverybot/helm@v1'
