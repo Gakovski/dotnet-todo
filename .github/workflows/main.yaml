@@ -7,6 +7,10 @@ jobs:
   scan-code:
     name: Scan code with CodeQL
     uses: gakovski/dotnet-todo/.github/workflows/scan-code.yaml@main
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
 
   build-docker:
     name: Build Docker Container
