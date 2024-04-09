@@ -23,12 +23,12 @@ jobs:
         chart: 'app'
         token: '${{ github.token }}'
         values: |
-          name: foobar
+          name: todoapi123
         value-files: >-
-        [
-          "values.yaml", 
-          "values.prod.yaml"
-        ]
+          [
+            "values.yaml", 
+            "values.prod.yaml"
+          ]
       #env:
       #  KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
 
