@@ -19,9 +19,6 @@ jobs:
       id: minikube
       uses: medyagh/setup-minikube@latest
 
-    - name: Get pods
-      run: kubectl get pods -A
-
     - name: Create Namespace
       run: kubectl create namespace train
 
@@ -35,7 +32,7 @@ jobs:
       run: |
         sleep 15
         echo "urlminikube=$(minikube service todoapi-train -n train --url)/todoitems" >> $GITHUB_ENV
-        sleep 15
+        sleep 20
 
     - name: POST Request
       uses: fjogeleit/http-request-action@v1
@@ -43,10 +40,11 @@ jobs:
         url: ${{ env.urlminikube }}
         method: 'POST'
         customHeaders: '{"Content-Type": "application/json"}'
-        data: '{"id": 1, "name": "dog walk", "isCompleted": false}'
+        data: '{"id": 1, "name": "train environment", "isCompleted": false}'
 
     - name: Test service URLs
       run: |
+        sleep 20
         echo "------------------opening the service------------------"
         curl ${{ env.urlminikube }}
 
