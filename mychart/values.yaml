@@ -6,7 +6,7 @@ replicas: 1
 
 port: 8080
 
-serviceType: NodePort
+serviceType: LoadBalancer
 
 image:
   name: gakovski/clockbox

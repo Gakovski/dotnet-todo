@@ -22,13 +22,11 @@ jobs:
     - name: Get pods
       run: kubectl get pods -A
 
-    - name: Deploy deployment-minikube.yaml
-      run:
-        kubectl apply -f ./mychart/templates/deployment-minikube.yaml
+    - name: Create Namespace
+      run: kubectl create namespace train
 
-    - name: Deploy service-minikube.yaml
-      run:
-        kubectl apply -f ./mychart/templates/service-minikube.yaml
+    - name: Install Helm Chart
+      run: helm install todoapi-train ./mychart/ --values ./mychart/values.yaml -f ./mychart/values-train.yaml -n train
   
     - name: Get pods
       run: kubectl get pods -A
@@ -36,7 +34,7 @@ jobs:
     - name: Get URL
       run: |
         sleep 15
-        echo "urlminikube=$(minikube service todoapi-minikube --url)/todoitems" >> $GITHUB_ENV
+        echo "urlminikube=$(minikube service todoapi-train --url)/todoitems" >> $GITHUB_ENV
         sleep 15
 
     - name: POST Request
