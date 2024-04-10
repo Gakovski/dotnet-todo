@@ -2,7 +2,6 @@ name: Push the Docker image to AWS ECR Repo
 
 on:
   workflow_call:
-    secrets:
     inputs:
       image_name:
         required: true
@@ -10,6 +9,7 @@ on:
       image_tag:
         required: true
         type: string
+    secrets:
       aws_access_key:
         required: true
       aws_secret_key:
