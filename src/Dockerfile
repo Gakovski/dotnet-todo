@@ -3,7 +3,7 @@ FROM public.ecr.aws/lambda/dotnet:8.2024.03.28.17 AS base
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /App
 
-COPY ./TodoApi.csproj ./
+COPY ./src/TodoApi.csproj ./
 RUN dotnet restore 
 
 COPY . ./
