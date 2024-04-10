@@ -44,5 +44,5 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.registry }}
           IMAGE_TAG: ${{ inputs.image_name }}:${{ inputs.image_tag }}
         run: |
-          docker build -t dotnet-todo-ecr -f ./src/Dockerfile .
+          docker build -t ${{ inputs.image_name }}:${{ inputs.image_tag }} -f ./src/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
