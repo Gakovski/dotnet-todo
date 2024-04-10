@@ -10,28 +10,28 @@ on:
         type: boolean
 
 jobs:
-  scan-code:
-    name: Scan code with CodeQL
-    uses: gakovski/dotnet-todo/.github/workflows/scan-code.yaml@main
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
+  #scan-code:
+  #  name: Scan code with CodeQL
+  #  uses: gakovski/dotnet-todo/.github/workflows/scan-code.yaml@main
+  #  permissions:
+  #    security-events: write
+  #    actions: read
+  #    contents: read
 
-  build-docker-local:
-    name: Build Docker Container
-    needs: scan-code
-    uses: gakovski/dotnet-todo/.github/workflows/build.yaml@main
-    with:
-      image_name: 'to-do-api'
-      image_tag: 'latest'
-    secrets:
-      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
-      dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #build-docker-local:
+  #  name: Build Docker Container
+  #  needs: scan-code
+  #  uses: gakovski/dotnet-todo/.github/workflows/build.yaml@main
+  #  with:
+  #    image_name: 'to-do-api'
+  #    image_tag: 'latest'
+  #  secrets:
+  #    dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #    dockerhub_password: ${{ secrets.DOCKERHUB_TOKEN }}
   
   build-docker-ecr:
     name: Build and Push to Amazon ECR
-    needs: scan-code
+    #needs: scan-code
     uses: gakovski/dotnet-todo/.github/workflows/aws-ecr.yaml@main
     with:
       image_name: 'to-do-api-ecr'
@@ -39,6 +39,7 @@ jobs:
     secrets:
       aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      aws_repository: ${{ secrets.REPO_NAME }}
 
   #deploy-lambda:
   #  name: Deploy AWS Lambda
@@ -51,28 +52,28 @@ jobs:
   #    aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
   #    aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  deploy-cluster-train:
-    name: Deploy K8S Cluster - Train
-    needs: build-docker-local
-    uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
-    with:
-      environment: 'train'
-
-  deploy-cluster-prod:
-    name: Deploy K8S Cluster - Prod
-    needs: deploy-cluster-train
-    if: ${{ inputs.deploy_prod }}
-    uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
-    with:
-      environment: 'prod'
-
-  create-release:
-    name: Create Release Notes
-    needs: deploy-cluster-prod
-    uses: gakovski/dotnet-todo/.github/workflows/release.yaml@main
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+  #deploy-cluster-train:
+  #  name: Deploy K8S Cluster - Train
+  #  needs: build-docker-local
+  #  uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
+  #  with:
+  #    environment: 'train'
+#
+  #deploy-cluster-prod:
+  #  name: Deploy K8S Cluster - Prod
+  #  needs: deploy-cluster-train
+  #  if: ${{ inputs.deploy_prod }}
+  #  uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
+  #  with:
+  #    environment: 'prod'
+#
+  #create-release:
+  #  name: Create Release Notes
+  #  needs: deploy-cluster-prod
+  #  uses: gakovski/dotnet-todo/.github/workflows/release.yaml@main
+  #  secrets:
+  #    token: ${{ secrets.GITHUB_TOKEN }}
+  #  permissions:
+  #    contents: write
+  #    issues: write
+  #    pull-requests: write
