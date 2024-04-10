@@ -33,6 +33,9 @@ jobs:
     name: Build and Push to Amazon ECR
     needs: scan-code
     uses: gakovski/dotnet-todo/.github/workflows/aws-ecr.yaml@main
+    with:
+      image_name: 'to-do-api-ecr'
+      image_tag: 'latest'
     secrets:
       aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
