@@ -14,8 +14,6 @@ on:
         required: true
       aws_secret_key:
         required: true
-      registry:
-        required: true
 
 jobs:
   Build:
@@ -41,6 +39,8 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          image_name: ${{ inputs.image_name }}
+          image_tag: ${{ inputs.image_tag }}
         run: |
-          docker build -t ${{ inputs.image_name }} -f ./src/Dockerfile .
-          docker push $ECR_REGISTRY/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          docker build -t $image_name -f ./src/Dockerfile .
+          docker push $ECR_REGISTRY/$image_name:$image_tag
