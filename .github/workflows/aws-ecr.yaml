@@ -46,4 +46,5 @@ jobs:
           IMG_TAG: ${{ inputs.image_tag }}
         run: |
           docker build -t $ECR_REGISTRY/$IMG_NAME -f ./src/Dockerfile .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMG_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMG_TAG
