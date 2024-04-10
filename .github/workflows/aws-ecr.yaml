@@ -37,14 +37,20 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push the image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.aws_repository }}
-          IMG_NAME: ${{ inputs.image_name }}
-          IMG_TAG: ${{ inputs.image_tag }}
-        run: |
-          docker build -t $ECR_REGISTRY/$IMG_NAME -f ./src/Dockerfile .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMG_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMG_TAG
+        - name: Get commit hash
+          id: get-commit-hash
+          run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
+        
+        - name: Get timestamp
+          id: get-timestamp
+          run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
+
+        - name: Build, tag, and push the image to Amazon ECR
+          id: build-image
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: ${{ secrets.aws_repository }}
+            IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
+          run: |
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./src/Dockerfile .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
