@@ -40,7 +40,7 @@ jobs:
 
   deploy-cluster-train:
     name: Deploy K8S Cluster - Train
-    needs: build-docker
+    needs: build-docker-local
     uses: gakovski/dotnet-todo/.github/workflows/deploy.yaml@main
     with:
       environment: 'train'
