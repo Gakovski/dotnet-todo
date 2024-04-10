@@ -42,5 +42,5 @@ jobs:
           image_name: ${{ inputs.image_name }}
           image_tag: ${{ inputs.image_tag }}
         run: |
-          docker build -t $image_name -f ./src/Dockerfile .
+          docker build -t $ECR_REGISTRY/$image_name -f ./src/Dockerfile .
           docker push $ECR_REGISTRY/$image_name:$image_tag
