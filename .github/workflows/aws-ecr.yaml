@@ -42,5 +42,5 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t ${{ inputs.image_name }}:${{ inputs.image_tag }} -f ./src/Dockerfile .
+          docker build -t ${{ inputs.image_name }} -f ./src/Dockerfile .
           docker push $ECR_REGISTRY/${{ inputs.image_name }}:${{ inputs.image_tag }}
