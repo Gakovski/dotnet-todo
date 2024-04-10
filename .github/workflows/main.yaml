@@ -41,16 +41,15 @@ jobs:
       aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws_repository: ${{ secrets.REPO_NAME }}
 
-  #deploy-lambda:
-  #  name: Deploy AWS Lambda
-  #  needs: build-docker-ecr
-  #  uses: gakovski/dotnet-todo/.github/workflows/aws-deploy.yaml@main
-  #  with:
-  #    func_name: 'to-do-api-lambda'
-  #    uri: ''
-  #  secrets:
-  #    aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #    aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  deploy-lambda:
+    name: Deploy AWS Lambda
+    needs: build-docker-ecr
+    uses: gakovski/dotnet-todo/.github/workflows/aws-deploy.yaml@main
+    with:
+      func_name: 'to-do-api-lambda'
+    secrets:
+      aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   #deploy-cluster-train:
   #  name: Deploy K8S Cluster - Train

@@ -6,9 +6,6 @@ on:
       func_name:
         required: true
         type: string
-      uri:
-        required: true
-        type: string
     secrets:
       aws_access_key:
         required: true
@@ -23,6 +20,9 @@ jobs:
       - name: checkout source code
         uses: actions/checkout@v4
 
+      - name: Get URI of the Docker image from previous job
+        run: echo "The URI of the Docker image is ${{ needs.build-docker-ecr.outputs.image_uri }}"
+      
       - name: Deploy container lambda
         uses: appleboy/lambda-action@v0.1.9
         with:
@@ -30,4 +30,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.aws_secret_key }}
           aws_region: us-east-1
           function_name: ${{ inputs.func_name }}
-          image_uri: ${{ inputs.uri }}
+          image_uri: ${{ needs.build-docker-ecr.outputs.image_uri }}

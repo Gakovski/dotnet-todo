@@ -44,6 +44,7 @@ jobs:
       - name: Get timestamp
         id: get-timestamp
         run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
+      
       - name: Build, tag, and push the image to Amazon ECR
         id: build-image
         env:
@@ -53,3 +54,8 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./src/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          
+      - name: Get URI of the Docker image
+        id: get-image-uri
+        run: |
+          echo "::set-output name=image_uri::$ECR_REGISTRY/$ECR_REPOSITORY:$IMG_TAG"
