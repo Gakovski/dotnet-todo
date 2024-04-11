@@ -32,7 +32,7 @@ jobs:
   build-deploy-lambda-train:
     name: Build and Push to Amazon ECR - Train
     needs: scan-code
-    uses: gakovski/dotnet-todo/.github/workflows/aws-ecr.yaml@main
+    uses: gakovski/dotnet-todo/.github/workflows/lambda.yaml@main
     with:
       func_name: 'to-do-api-lambda-train'
     secrets:
@@ -44,7 +44,7 @@ jobs:
     name: Build and Push to Amazon ECR - Prod
     needs: build-deploy-lambda-train
     if: ${{ inputs.deploy_prod }}
-    uses: gakovski/dotnet-todo/.github/workflows/aws-ecr.yaml@main
+    uses: gakovski/dotnet-todo/.github/workflows/lambda.yaml@main
     with:
       func_name: 'to-do-api-lambda-prod'
     secrets:
