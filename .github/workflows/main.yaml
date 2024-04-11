@@ -31,7 +31,6 @@ jobs:
   
   build-deploy-lambda-train:
     name: Build and Push to Amazon ECR - Train
-    continue-on-error: true
     needs: scan-code
     uses: gakovski/dotnet-todo/.github/workflows/aws-ecr.yaml@main
     with:
@@ -43,7 +42,6 @@ jobs:
 
   build-deploy-lambda-prod:
     name: Build and Push to Amazon ECR - Prod
-    continue-on-error: true
     needs: build-deploy-lambda-train
     uses: gakovski/dotnet-todo/.github/workflows/aws-ecr.yaml@main
     with:
@@ -71,7 +69,7 @@ jobs:
 
   create-release:
     name: Create Release Notes
-    needs: deploy-cluster-prod
+    needs: [deploy-cluster-prod, build-deploy-lambda-prod]
     uses: gakovski/dotnet-todo/.github/workflows/release.yaml@main
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
