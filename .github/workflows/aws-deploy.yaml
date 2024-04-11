@@ -25,6 +25,7 @@ jobs:
 
       - name: Get URI of the Docker image from previous job
         run: echo "The URI of the Docker image is ${{ needs.build-docker-ecr.outputs.image_uri }}"
+        run: echo "The URI of the Docker image is ${{ needs.build-docker-ecr.outputs.uri}}
       
       - name: Deploy container lambda
         uses: appleboy/lambda-action@v0.1.9
