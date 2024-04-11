@@ -47,6 +47,7 @@ jobs:
     uses: gakovski/dotnet-todo/.github/workflows/aws-deploy.yaml@main
     with:
       func_name: 'to-do-api-lambda'
+      lambda_uri: ${{ needs.build-docker-ecr.outputs.uri}}
     secrets:
       aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -16,6 +16,9 @@ on:
         required: true
       aws_repository:
         required: true
+    outputs:
+      image_uri_output:
+        value: ${{ jobs.Build.outputs.image_uri}}
 
 jobs:
   Build:
