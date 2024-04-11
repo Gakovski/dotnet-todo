@@ -3,10 +3,7 @@ name: Reusable - Push to AWS ECR
 on:
   workflow_call:
     inputs:
-      image_name:
-        required: true
-        type: string
-      image_tag:
+      func_name:
         required: true
         type: string
     secrets:
@@ -16,16 +13,10 @@ on:
         required: true
       aws_repository:
         required: true
-    outputs:
-      image_uri_output:
-        value: ${{ jobs.Build.outputs.image_uri}}
 
 jobs:
-  Build:
-    name: Build
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      image_uri: ${{ steps.build-image.outputs.uri }}
     steps:
 
       - name: Checkout
@@ -59,6 +50,24 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./src/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "uri=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-          echo ghoutput is ${{ needs.build.outputs.image_uri }}
-          echo ghoutput is ${{ needs.build.outputs.image_uri_output }}
+
+  deploy_lambda:
+    name: Deploy Lambda
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+      
+      - name: Deploy container lambda
+        uses: appleboy/lambda-action@v0.1.9
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.aws_repository }}
+          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
+        with:
+          aws_access_key_id: ${{ secrets.aws_access_key }}
+          aws_secret_access_key: ${{ secrets.aws_secret_key }}
+          aws_region: us-east-1
+          function_name: ${{ inputs.func_name }}
+          image_uri: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

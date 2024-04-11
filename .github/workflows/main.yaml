@@ -34,33 +34,11 @@ jobs:
     #needs: scan-code
     uses: gakovski/dotnet-todo/.github/workflows/aws-ecr.yaml@main
     with:
-      image_name: 'to-do-api-ecr'
-      image_tag: 'latest'
+      func_name: 'to-do-api-lambda'
     secrets:
       aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws_repository: ${{ secrets.REPO_NAME }}
-
-  test:
-    runs-on: ubuntu-latest
-    needs: build-docker-ecr
-    steps:
-      - name: Get URI of the Docker image from previous job
-        run: |
-          echo ${{ needs.build-docker-ecr.outputs.image_uri }}
-          echo ${{ needs.build-docker-ecr.outputs.uri}}
-          echo ${{ needs.build-docker-ecr.outputs.image_uri_output}}
-
-  deploy-lambda:
-    name: Deploy AWS Lambda
-    needs: build-docker-ecr
-    uses: gakovski/dotnet-todo/.github/workflows/aws-deploy.yaml@main
-    with:
-      func_name: 'to-do-api-lambda'
-      lambda_uri: ${{ needs.build-docker-ecr.outputs.uri}}
-    secrets:
-      aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   #deploy-cluster-train:
   #  name: Deploy K8S Cluster - Train
