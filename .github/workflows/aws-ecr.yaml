@@ -48,7 +48,6 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   deploy_lambda:
-    name: Deploy Lambda
     needs: build
     runs-on: ubuntu-latest
     steps:
