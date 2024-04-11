@@ -47,9 +47,9 @@ jobs:
     steps:
       - name: Get URI of the Docker image from previous job
         run: |
-          echo "The URI of the Docker image is ${{ needs.build-docker-ecr.outputs.image_uri }}"
-          echo "The URI of the Docker image is ${{ needs.build-docker-ecr.outputs.uri}}"
-          echo "The URI of the Docker image is ${{ needs.build-docker-ecr.outputs.image_uri_output}}"
+          echo ${{ needs.build-docker-ecr.outputs.image_uri }}
+          echo ${{ needs.build-docker-ecr.outputs.uri}}
+          echo ${{ needs.build-docker-ecr.outputs.image_uri_output}}
 
   deploy-lambda:
     name: Deploy AWS Lambda
