@@ -126,6 +126,7 @@ The output will display the IP address and port number. Open that url and add /t
 3. **release.yaml**: Creates release notes using semantic versioning.
 4. **scan-code.yaml**: Analyzes the code using CodeQL.
 5. **main.yaml**: Main CI/CD workflow that orchestrates the execution of other workflows based on specific conditions.
+6. **lambda.yaml**: Builds and deploys a Docker container to AWS ECR, then deploys it as an AWS Lambda function.
 
 ## Workflow Details
 
@@ -164,6 +165,17 @@ Main CI/CD workflow that orchestrates the execution of other workflows based on 
 
 - **Inputs**:
   - `deploy_prod`: Boolean variable indicating whether to deploy to the production environment.
+
+### 6. lambda.yaml
+
+Builds and deploys a Docker container to AWS ECR, then deploys it as an AWS Lambda function.
+
+- **Inputs**:
+  - `func_name`: Name of the AWS Lambda function.
+- **Secrets**:
+  - `aws_access_key`: AWS Access Key ID.
+  - `aws_secret_key`: AWS Secret Access Key.
+  - `aws_repository`: Name of the AWS ECR repository.
 
 ## Conditional Execution
 
