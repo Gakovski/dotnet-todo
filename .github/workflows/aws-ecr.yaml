@@ -37,16 +37,12 @@ jobs:
         id: get-commit-hash
         run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
       
-      - name: Get timestamp
-        id: get-timestamp
-        run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
-      
       - name: Build, tag, and push the image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.aws_repository }}
-          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
+          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./src/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -58,16 +54,24 @@ jobs:
     steps:
       - name: checkout source code
         uses: actions/checkout@v4
-      
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Get commit hash
+        id: get-commit-hash
+        run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
+
       - name: Deploy container lambda
         uses: appleboy/lambda-action@v0.1.9
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.aws_repository }}
-          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
+          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}
         with:
           aws_access_key_id: ${{ secrets.aws_access_key }}
           aws_secret_access_key: ${{ secrets.aws_secret_key }}
           aws_region: us-east-1
           function_name: ${{ inputs.func_name }}
-          image_uri: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          image_uri: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
